@@ -14,9 +14,10 @@ defmodule Tahmeel.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Tahmeel.PubSub},
       # Start the Endpoint (http/https)
-      TahmeelWeb.Endpoint
+      TahmeelWeb.Endpoint,
       # Start a worker by calling: Tahmeel.Worker.start_link(arg)
       # {Tahmeel.Worker, arg}
+      Tahmeel.Orders.Tasks.Scheduler
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

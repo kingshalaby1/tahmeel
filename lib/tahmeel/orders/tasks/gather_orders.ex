@@ -9,8 +9,9 @@ defmodule Tahmeel.Orders.Tasks.GatherOrders do
   alias Tahmeel.Orders.Order
   use Timex
 
-  #  @spec prepare_bulk_orders(DateTime.t()) :: %{total_weight: number(), orders: [Order.t()]}
-  def run(time) do
+  def run(), do: prepare_bulk_orders(DateTime.utc_now())
+
+  def prepare_bulk_orders(time) do
     from =
       time
       |> Timex.subtract(Duration.from_days(1))
@@ -30,13 +31,9 @@ defmodule Tahmeel.Orders.Tasks.GatherOrders do
     {total_weight, pickups, dropoffs} =
       Enum.reduce(orders, {0, [], []}, fn %{weight: w, pickup: pickup, dropoff: dropoff},
                                           {weight, pickups, dropoffs} ->
-#        IO.inspect(pickup, label: "pickups>>>")
-#        IO.inspect(dropoff, label: "dropoff>>>")
         {weight + w, [pickup | pickups], [dropoff | dropoffs]}
       end)
 
-#         IO.inspect(pickups, label: "pickups>>>")
-#    IO.inspect(dropoffs, label: "dropoffs>>>")
     %{
       reference: Ecto.UUID.generate(),
       total_weight: total_weight,

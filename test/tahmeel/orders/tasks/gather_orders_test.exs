@@ -4,12 +4,11 @@ defmodule Tahmeel.Orders.Tasks.GatherOrdersTest do
   alias Tahmeel.Orders
   alias Tahmeel.Orders.Tasks.GatherOrders
 
-  @yesterday NaiveDateTime.add(NaiveDateTime.utc_now(), -3600 * 24, :second) |> NaiveDateTime.truncate(:second)
+  @yesterday NaiveDateTime.add(NaiveDateTime.utc_now(), -3600 * 24, :second)
+             |> NaiveDateTime.truncate(:second)
 
-  describe "GatherOrders task" do
-
+  describe "prepare_bulk_orders/2" do
     test "it collects order created yesterday" do
-
       c1 = Repo.insert!(%Orders.Client{email: "c1@mail.com"})
 
       address1 =
@@ -64,18 +63,13 @@ defmodule Tahmeel.Orders.Tasks.GatherOrdersTest do
         dropoff_adresses: [address3.id, address2.id]
       }
 
-
-
-      actual_bulk = GatherOrders.run(DateTime.utc_now())
+      actual_bulk = GatherOrders.prepare_bulk_orders(DateTime.utc_now())
       assert expected_bulk.total_weight == actual_bulk.total_weight
       assert expected_bulk.pickup_adresses == actual_bulk.pickup_adresses
       assert expected_bulk.dropoff_adresses == actual_bulk.dropoff_adresses
     end
 
     test "it does not collect order created older than yesterday" do
-
-
-
       c1 = Repo.insert!(%Orders.Client{email: "c1@mail.com"})
 
       address1 =
@@ -112,18 +106,13 @@ defmodule Tahmeel.Orders.Tasks.GatherOrdersTest do
         dropoff_adresses: []
       }
 
-
-
-      actual_bulk = GatherOrders.run(DateTime.utc_now())
+      actual_bulk = GatherOrders.prepare_bulk_orders(DateTime.utc_now())
       assert expected_bulk.total_weight == actual_bulk.total_weight
       assert expected_bulk.pickup_adresses == actual_bulk.pickup_adresses
       assert expected_bulk.dropoff_adresses == actual_bulk.dropoff_adresses
     end
 
     test "it does not collect order created today" do
-
-
-
       c1 = Repo.insert!(%Orders.Client{email: "c1@mail.com"})
 
       address1 =
@@ -160,17 +149,10 @@ defmodule Tahmeel.Orders.Tasks.GatherOrdersTest do
         dropoff_adresses: []
       }
 
-
-
-      actual_bulk = GatherOrders.run(DateTime.utc_now())
+      actual_bulk = GatherOrders.prepare_bulk_orders(DateTime.utc_now())
       assert expected_bulk.total_weight == actual_bulk.total_weight
       assert expected_bulk.pickup_adresses == actual_bulk.pickup_adresses
       assert expected_bulk.dropoff_adresses == actual_bulk.dropoff_adresses
     end
-
-
-
   end
-
-
 end
