@@ -2,8 +2,10 @@ defmodule Tahmeel.Orders.Order do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{}
+
   schema "orders" do
-    field :weight, :decimal
+    field :weight, :float
     field :dropoff, :id
     field :pickup, :id
     field :client_id, :id

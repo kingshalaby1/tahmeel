@@ -3,7 +3,7 @@ defmodule Tahmeel.Repo.Migrations.CreateOrders do
 
   def change do
     create table(:orders) do
-      add :weight, :decimal
+      add :weight, :float
       add :dropoff, references(:addresses, on_delete: :nothing)
       add :pickup, references(:addresses, on_delete: :nothing)
       add :client_id, references(:clients, on_delete: :nothing)
